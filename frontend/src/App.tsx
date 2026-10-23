@@ -36,6 +36,7 @@ import type { RouteConfig } from './config/routes';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import SellerRoute from './components/SellerRoute';
+import PageTransition from './components/PageTransition';
 
 /**
  * AppContent component - handles routing and auth logic
@@ -129,7 +130,8 @@ function AppContent() {
       <PageLoader isLoading={!appReady || authLoading} message="Loading app..." />
       <Router>
         <ScrollToTop />
-        <Routes>
+        <PageTransition>
+          <Routes>
           {/* Admin routes - NOT wrapped in Layout */}
           {adminRoutes.map((route) => (
             <Route key={route.path} path={route.path} element={renderRoute(route, 'admin')} />
@@ -180,7 +182,8 @@ function AppContent() {
               </Layout>
             }
           />
-        </Routes>
+          </Routes>
+        </PageTransition>
       </Router>
     </>
   );

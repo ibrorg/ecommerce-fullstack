@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Reveal from '../Reveal';
 
 const Footer: React.FC = () => {
   return (
@@ -8,78 +9,86 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-neutral-950 dark:bg-neutral-100 flex items-center justify-center text-white dark:text-neutral-900 text-sm font-bold">
-                E
-              </div>
-              <span className="font-semibold text-neutral-950 dark:text-neutral-100">E-Shop</span>
-            </Link>
-            <p className="text-sm text-neutral-500 leading-relaxed max-w-xs">
-              Quality products, thoughtfully selected. Simple shopping, exceptional service.
-            </p>
+            <Reveal direction="up" delay={0}>
+              <Link to="/" className="flex items-center gap-2.5 mb-4">
+                <div className="h-8 w-8 rounded-lg bg-neutral-950 dark:bg-neutral-100 flex items-center justify-center text-white dark:text-neutral-900 text-sm font-bold">
+                  E
+                </div>
+                <span className="font-semibold text-neutral-950 dark:text-neutral-100">E-Shop</span>
+              </Link>
+              <p className="text-sm text-neutral-500 leading-relaxed max-w-xs">
+                Quality products, thoughtfully selected. Simple shopping, exceptional service.
+              </p>
+            </Reveal>
           </div>
 
           {/* Shop */}
-          <div>
-            <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">SHOP</h4>
-            <ul className="space-y-3">
-              {[
-                { label: 'All Products', href: '/products' },
-                { label: 'New Arrivals', href: '/products' },
-                { label: 'Best Sellers', href: '/products' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link 
-                    to={item.href} 
-                    className="text-sm text-neutral-600 hover:text-neutral-950 transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Reveal direction="up" delay={80}>
+            <div>
+              <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">SHOP</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'All Products', href: '/products' },
+                  { label: 'New Arrivals', href: '/products' },
+                  { label: 'Best Sellers', href: '/products' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link 
+                      to={item.href} 
+                      className="text-sm text-neutral-600 hover:text-neutral-950 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
 
           {/* Account */}
-          <div>
-            <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">ACCOUNT</h4>
-            <ul className="space-y-3">
-              {[
-                { label: 'Profile', href: '/profile' },
-                { label: 'Orders', href: '/orders' },
-                { label: 'Cart', href: '/cart' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link 
-                    to={item.href} 
-                    className="text-sm text-neutral-600 hover:text-neutral-950 transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Reveal direction="up" delay={160}>
+            <div>
+              <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">ACCOUNT</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Profile', href: '/profile' },
+                  { label: 'Orders', href: '/orders' },
+                  { label: 'Cart', href: '/cart' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link 
+                      to={item.href} 
+                      className="text-sm text-neutral-600 hover:text-neutral-950 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
 
           {/* Contact */}
-          <div>
-            <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">CONTACT</h4>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a 
-                  href="https://github.com/ibrorg" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-neutral-600 hover:text-neutral-950 transition-colors"
-                >
-                  github.com/ibrorg
-                </a>
-              </li>
-              <li className="text-neutral-500">
-                Mon–Fri, 9am–6pm ET
-              </li>
-            </ul>
-          </div>
+          <Reveal direction="up" delay={240}>
+            <div>
+              <h4 className="text-meta text-neutral-500 dark:text-neutral-400 mb-4">CONTACT</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a 
+                    href="https://github.com/ibrorg" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-neutral-600 hover:text-neutral-950 transition-colors"
+                  >
+                    github.com/ibrorg
+                  </a>
+                </li>
+                <li className="text-neutral-500">
+                  Mon–Fri, 9am–6pm ET
+                </li>
+              </ul>
+            </div>
+          </Reveal>
         </div>
 
         {/* Bottom */}
