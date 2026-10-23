@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { fetchWishlist, resetWishlist } from '../../store/slices/wishlistSlice';
 import ThemeToggle from '../ThemeToggle';
+import CurrencySwitcher from '../CurrencySwitcher';
 import { FiShoppingCart, FiUser, FiLogOut, FiMenu, FiX, FiSearch, FiHeart, FiGlobe, FiClock, FiArrowUpRight, FiTrash2 } from 'react-icons/fi';
 import { useSearchHistory } from '../../hooks/useSearchHistory';
 
@@ -151,6 +152,9 @@ const Header: React.FC = () => {
 
             {/* Theme toggle */}
             <ThemeToggle />
+
+            {/* Currency switcher */}
+            <CurrencySwitcher />
 
             {/* Language switcher */}
             <LanguageSwitcher />

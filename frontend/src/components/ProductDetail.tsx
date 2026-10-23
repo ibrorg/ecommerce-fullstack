@@ -14,6 +14,7 @@ import RecentlyViewed from './RecentlyViewed';
 import RelatedProducts from './RelatedProducts';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useCurrency } from '../context/CurrencyContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { FiShoppingBag, FiCheck, FiTruck, FiArrowRight, FiShoppingCart } from 'react-icons/fi';
@@ -55,6 +56,7 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const { trackView } = useRecentlyViewed();
+  const { formatPrice } = useCurrency();
   const [product, setProduct] = useState<ProductApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -297,7 +299,7 @@ const ProductDetail: React.FC = () => {
             <div className="space-y-4 p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-900 dark:to-neutral-800 border border-gray-200 dark:border-neutral-800">
               <div className="flex items-baseline gap-4 flex-wrap">
                 <span className="text-5xl sm:text-6xl font-bold text-gray-900">
-                  ${product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </span>
               </div>
               <div className="flex items-center gap-3 text-base text-green-600 font-semibold">

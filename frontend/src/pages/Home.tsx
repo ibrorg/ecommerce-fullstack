@@ -6,6 +6,7 @@ import api from '../services/api';
 import RecentlyViewed from '../components/RecentlyViewed';
 import ErrorState from '../components/ErrorState';
 import Reveal from '../components/Reveal';
+import { useCurrency } from '../context/CurrencyContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import {
   FiArrowRight,
@@ -447,6 +448,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({ 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const { formatPrice } = useCurrency();
   
   const imageSrc = imageError 
     ? FALLBACK_PRODUCT_IMAGE 
@@ -516,7 +518,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({ 
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between">
           <span className="text-xl font-bold text-gray-900">
-            ${product.price.toFixed(2)}
+            {formatPrice(product.price)}
           </span>
           <button
             onClick={handleAddToCart}
