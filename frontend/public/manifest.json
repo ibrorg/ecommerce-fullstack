@@ -1,0 +1,21 @@
+{
+  "name": "E-Shop — Full Stack E-Commerce",
+  "short_name": "E-Shop",
+  "description": "Quality products, fast delivery, easy returns. Browse, compare, review, and checkout.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr"
+}

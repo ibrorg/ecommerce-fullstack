@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "shop": "Shop",
+    "collections": "Collections",
+    "bag": "Bag",
+    "login": "Login",
+    "signup": "Sign up",
+    "logout": "Logout",
+    "wishlist": "Wishlist",
+    "profile": "Profile",
+    "orders": "Orders"
+  },
+  "home": {
+    "heroTitle": "Discover",
+    "heroSubtitle": "Quality Essentials.",
+    "heroDescription": "Curated products with exceptional quality, simplicity, and outstanding service. Shop with confidence.",
+    "exploreCollections": "Explore Collections",
+    "createAccount": "Create Account",
+    "trendingTitle": "Trending Products",
+    "trendingSubtitle": "Discover our most popular items, handpicked for quality and style.",
+    "viewAll": "View All Products",
+    "freeShipping": "Free Shipping",
+    "returns": "30-Day Returns",
+    "securePayment": "Secure Payment"
+  },
+  "product": {
+    "addToBag": "Add to Bag",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "reviews": "Reviews",
+    "writeReview": "Write a Review",
+    "compare": "Compare",
+    "quickView": "Quick View",
+    "relatedProducts": "Related Products",
+    "recentlyViewed": "Recently Viewed"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "Start exploring our collection and add items to your cart.",
+    "exploreProducts": "Explore Products",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "clearCart": "Clear Cart",
+    "quantity": "Quantity"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shipping": "Shipping",
+    "payment": "Payment",
+    "review": "Review",
+    "placeOrder": "Place Order",
+    "orderSummary": "Order Summary"
+  },
+  "auth": {
+    "loginTitle": "Welcome Back",
+    "registerTitle": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full Name",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clearAll": "Clear All",
+    "share": "Share",
+    "backToTop": "Back to top"
+  }
+}

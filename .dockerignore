@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.env
+.env.local
+.env.*.local
+*.log
+coverage
+.nyc_output
+.DS_Store
+README.md
+*.md
+tests
+src/scripts
+src/migrations

@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "shop": "दुकान",
+    "collections": "संग्रह",
+    "bag": "बैग",
+    "login": "लॉगिन",
+    "signup": "साइन अप",
+    "logout": "लॉगआउट",
+    "wishlist": "विशलिस्ट",
+    "profile": "प्रोफ़ाइल",
+    "orders": "ऑर्डर"
+  },
+  "home": {
+    "heroTitle": "खोजें",
+    "heroSubtitle": "गुणवत्तापूर्ण आवश्यकताएँ।",
+    "heroDescription": "असाधारण गुणवत्ता, सरलता और उत्कृष्ट सेवा के साथ चयनित उत्पाद। आत्मविश्वास के साथ खरीदें।",
+    "exploreCollections": "संग्रह देखें",
+    "createAccount": "खाता बनाएं",
+    "trendingTitle": "ट्रेंडिंग उत्पाद",
+    "trendingSubtitle": "हमारे सबसे लोकप्रिय आइटम खोजें, गुणवत्ता और शैली के लिए हाथ से चुने गए।",
+    "viewAll": "सभी उत्पाद देखें",
+    "freeShipping": "मुफ्त शिपिंग",
+    "returns": "30-दिन रिटर्न",
+    "securePayment": "सुरक्षित भुगतान"
+  },
+  "product": {
+    "addToBag": "बैग में जोड़ें",
+    "inStock": "स्टॉक में",
+    "outOfStock": "स्टॉक में नहीं",
+    "reviews": "समीक्षाएँ",
+    "writeReview": "समीक्षा लिखें",
+    "compare": "तुलना करें",
+    "quickView": "त्वरित दृश्य",
+    "relatedProducts": "संबंधित उत्पाद",
+    "recentlyViewed": "हाल ही में देखे गए"
+  },
+  "cart": {
+    "title": "शॉपिंग कार्ट",
+    "empty": "आपका कार्ट खाली है",
+    "emptyDescription": "हमारा संग्रह देखें और अपने कार्ट में आइटम जोड़ें।",
+    "exploreProducts": "उत्पाद देखें",
+    "subtotal": "उप-योग",
+    "total": "कुल",
+    "checkout": "चेकआउट पर जाएं",
+    "clearCart": "कार्ट साफ़ करें",
+    "quantity": "मात्रा"
+  },
+  "checkout": {
+    "title": "चेकआउट",
+    "shipping": "शिपिंग",
+    "payment": "भुगतान",
+    "review": "समीक्षा",
+    "placeOrder": "ऑर्डर दें",
+    "orderSummary": "ऑर्डर सारांश"
+  },
+  "auth": {
+    "loginTitle": "वापसी पर स्वागत है",
+    "registerTitle": "खाता बनाएं",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "name": "पूरा नाम",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "noAccount": "खाता नहीं है?",
+    "hasAccount": "पहले से खाता है?"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हुआ",
+    "retry": "पुनः प्रयास करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "sort": "क्रमबद्ध करें",
+    "clearAll": "सभी साफ़ करें",
+    "share": "साझा करें",
+    "backToTop": "शीर्ष पर वापस"
+  }
+}

@@ -1,0 +1,367 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+/* enable class-based dark mode for Tailwind v4 (toggled on <html class="dark">) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 
+ * LUXURY MINIMAL DESIGN SYSTEM
+ * ============================
+ * Inspired by: Reference image - clean, off-white, minimal
+ * Philosophy: Spacing discipline, typographic hierarchy, restraint
+ * Color scheme: Black, white, and warm grays matching Login/Register UI
+ */
+
+@layer base {
+  :root {
+    /* Neutral palette - warm grays */
+    --ink-50: #fafafa;
+    --ink-100: #f5f5f5;
+    --ink-200: #e5e5e5;
+    --ink-300: #d4d4d4;
+    --ink-400: #a3a3a3;
+    --ink-500: #737373;
+    --ink-600: #525252;
+    --ink-700: #404040;
+    --ink-800: #262626;
+    --ink-900: #171717;
+    
+    /* Background */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    
+    /* Spacing rhythm - 4px base */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+    --space-24: 96px;
+  }
+
+  /* Dark theme — invert the ink scale + backgrounds so existing
+     var(--ink-*) usage adapts automatically. */
+  .dark {
+    --ink-50: #1a1a1a;
+    --ink-100: #222222;
+    --ink-200: #2e2e2e;
+    --ink-300: #3f3f3f;
+    --ink-400: #6b6b6b;
+    --ink-500: #9a9a9a;
+    --ink-600: #b5b5b5;
+    --ink-700: #d4d4d4;
+    --ink-800: #ececec;
+    --ink-900: #fafafa;
+
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #171717;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-800);
+    background: var(--bg-primary);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--ink-900);
+  }
+  
+  p {
+    color: var(--ink-500);
+  }
+  
+  :focus-visible {
+    outline: 2px solid var(--ink-900);
+    outline-offset: 2px;
+  }
+  
+  ::selection {
+    background: var(--ink-900);
+    color: white;
+  }
+}
+
+/*
+ * Dark mode utility overrides
+ * ===========================
+ * Many pages use hardcoded light utilities (bg-white, text-gray-900, etc.)
+ * instead of the --ink-* variables. These rules map the most common ones to
+ * dark equivalents when inside .dark, so the whole app adapts without editing
+ * every className.
+ *
+ * Specificity note: :where(.dark) contributes 0, so each rule is (0,1,0) —
+ * equal to a single utility class. Explicit dark: variants live in the
+ * utilities layer (which comes after base), so they still win over these.
+ */
+@layer base {
+  :where(.dark) .bg-white { background-color: #171717; }
+  :where(.dark) .bg-gray-50,
+  :where(.dark) .bg-gray-100,
+  :where(.dark) .bg-neutral-50 { background-color: #0f0f0f; }
+  :where(.dark) .bg-gray-200 { background-color: #222222; }
+
+  :where(.dark) .text-gray-900,
+  :where(.dark) .text-gray-800,
+  :where(.dark) .text-neutral-900,
+  :where(.dark) .text-neutral-950 { color: #fafafa; }
+  :where(.dark) .text-gray-700,
+  :where(.dark) .text-gray-600,
+  :where(.dark) .text-neutral-700,
+  :where(.dark) .text-neutral-600 { color: #b5b5b5; }
+  :where(.dark) .text-gray-500,
+  :where(.dark) .text-gray-400,
+  :where(.dark) .text-neutral-500,
+  :where(.dark) .text-neutral-400 { color: #8a8a8a; }
+
+  :where(.dark) .border-gray-100,
+  :where(.dark) .border-gray-200,
+  :where(.dark) .border-neutral-100,
+  :where(.dark) .border-neutral-200 { border-color: #2e2e2e; }
+  :where(.dark) .border-gray-300,
+  :where(.dark) .border-gray-400,
+  :where(.dark) .border-neutral-300 { border-color: #3f3f3f; }
+
+  /* hover states that reference light surfaces */
+  :where(.dark) .hover\:bg-gray-50:hover,
+  :where(.dark) .hover\:bg-gray-100:hover,
+  :where(.dark) .hover\:bg-neutral-50:hover { background-color: #1f1f1f; }
+  :where(.dark) .hover\:bg-gray-200:hover { background-color: #2a2a2a; }
+  :where(.dark) .hover\:text-gray-900:hover,
+  :where(.dark) .hover\:text-neutral-900:hover { color: #fafafa; }
+  :where(.dark) .hover\:text-gray-700:hover,
+  :where(.dark) .hover\:text-gray-600:hover { color: #d4d4d4; }
+  :where(.dark) .hover\:border-gray-300:hover,
+  :where(.dark) .hover\:border-gray-400:hover { border-color: #525252; }
+
+  /* native inputs that default to white */
+  :where(.dark) input,
+  :where(.dark) textarea,
+  :where(.dark) select {
+    background-color: #171717;
+    color: #fafafa;
+  }
+  :where(.dark) input::placeholder,
+  :where(.dark) textarea::placeholder {
+    color: #6b6b6b;
+  }
+}
+
+/* Respect users who prefer reduced motion — disable all animations + transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 1280px;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-12 lg:py-16;
+  }
+
+  /* Buttons - Matching Login/Register style */
+  .btn {
+    @apply inline-flex items-center justify-center font-semibold transition-all duration-200;
+    border-radius: 12px;
+    font-size: 14px;
+    padding: 12px 24px;
+    cursor: pointer;
+  }
+  
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .btn-primary {
+    background: var(--ink-900);
+    color: white;
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    background: var(--ink-800);
+  }
+  
+  .btn-primary:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  
+  .btn-secondary {
+    background: white;
+    color: var(--ink-900);
+    border: 2px solid var(--ink-200);
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--ink-50);
+    border-color: var(--ink-300);
+  }
+
+  /* Cards - Enhanced with shadows */
+  .card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--ink-100);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  }
+  
+  .card-interactive {
+    transition: all 0.2s ease;
+  }
+  
+  .card-interactive:hover {
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.08);
+    border-color: var(--ink-200);
+  }
+
+  /* Inputs - Matching Login/Register style */
+  .input {
+    @apply w-full px-4 py-3 text-sm;
+    background: white;
+    border: 2px solid var(--ink-200);
+    border-radius: 12px;
+    color: var(--ink-900);
+    transition: all 150ms ease;
+  }
+  
+  .input::placeholder {
+    color: var(--ink-400);
+  }
+  
+  .input:hover {
+    border-color: var(--ink-300);
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: var(--ink-900);
+  }
+
+  /* Grid system */
+  .masonry-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  @media (min-width: 640px) {
+    .masonry-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .masonry-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Typography helpers */
+  .text-headline {
+    @apply text-3xl sm:text-4xl font-bold text-gray-900;
+    letter-spacing: -0.025em;
+  }
+  
+  .text-body {
+    @apply text-base text-gray-500 leading-relaxed;
+  }
+  
+  .text-meta {
+    @apply text-xs font-bold uppercase tracking-widest;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 300ms ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 300ms ease;
+  }
+  
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Loading skeleton */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--ink-100) 0%,
+      var(--ink-200) 50%,
+      var(--ink-100) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton 1.5s ease infinite;
+    border-radius: 8px;
+  }
+  
+  @keyframes skeleton {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Pills/Badges */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+    background: white;
+    color: var(--ink-700);
+  }
+  
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

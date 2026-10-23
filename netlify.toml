@@ -1,0 +1,15 @@
+[build]
+  base = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+# SPA fallback for React Router deep links
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Vite variables (VITE_*) are baked into the client bundle — not secrets
+  SECRETS_SCAN_OMIT_KEYS = "VITE_API_URL"

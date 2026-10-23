@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="E-Shop — a full-stack e-commerce platform. Browse quality products, compare, review, and checkout with Stripe, Razorpay, or COD." />
+    <meta name="keywords" content="ecommerce, online shopping, electronics, fashion, home goods, marketplace" />
+    <meta name="author" content="ibrorg" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="E-Shop" />
+    <meta property="og:title" content="E-Shop — Full Stack E-Commerce" />
+    <meta property="og:description" content="Browse quality products, compare, review, and checkout with Stripe, Razorpay, or COD." />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="E-Shop — Full Stack E-Commerce" />
+    <meta name="twitter:description" content="Browse quality products, compare, review, and checkout with Stripe, Razorpay, or COD." />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="E-Shop" />
+
+    <!-- Performance: preconnect to API + font origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+    <title>E-Shop — Full Stack E-Commerce</title>
+    <script>
+      // Apply theme before paint to avoid a flash of the wrong color scheme.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

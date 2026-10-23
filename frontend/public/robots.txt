@@ -1,0 +1,12 @@
+# robots.txt — allows all crawlers, points to sitemap
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /seller
+Disallow: /api
+Disallow: /checkout
+Disallow: /orders
+Disallow: /profile
+Disallow: /wishlist
+
+Sitemap: /sitemap.xml
