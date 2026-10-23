@@ -6,6 +6,7 @@ import { clearCart } from '../store/slices/cartSlice';
 import { Spinner } from './Loading';
 import api from '../services/api';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useCurrency } from '../context/CurrencyContext';
 import toast from 'react-hot-toast';
 import { FiMapPin, FiCreditCard, FiCheck, FiArrowLeft, FiArrowRight, FiLoader, FiPackage, FiTag, FiX, FiAlertCircle, FiHome, FiBriefcase } from 'react-icons/fi';
 
@@ -66,6 +67,7 @@ const Checkout: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((state: any) => state.cart);
   const { user } = useAppSelector((state: any) => state.auth);
+  const { formatPrice } = useCurrency();
   useDocumentMeta({ title: 'Checkout', description: 'Complete your purchase securely with Stripe, Razorpay, or COD.' });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -141,7 +143,7 @@ const Checkout: React.FC = () => {
         setAppliedCoupon({ code, discountAmount: amount });
         setCouponStatus({
           type: 'success',
-          message: `Coupon applied: -$${amount.toFixed(2)}`,
+          message: `Coupon applied: -${formatPrice(amount)}`,
         });
       } else {
         setAppliedCoupon(null);
@@ -705,7 +707,7 @@ const Checkout: React.FC = () => {
                   <p className="text-sm text-gray-600 mt-1">Qty: <span className="font-semibold">{item.quantity}</span></p>
                 </div>
               </div>
-              <span className="font-bold text-lg text-gray-900 flex-shrink-0">${(item.price * item.quantity).toFixed(2)}</span>
+              <span className="font-bold text-lg text-gray-900 flex-shrink-0">{formatPrice(item.price * item.quantity)}</span>
             </div>
           ))}
         </div>
@@ -738,25 +740,25 @@ const Checkout: React.FC = () => {
         <div className="space-y-4">
           <div className="flex justify-between text-base text-gray-700">
             <span>Subtotal</span>
-            <span>${itemsPrice.toFixed(2)}</span>
+            <span>{formatPrice(itemsPrice)}</span>
           </div>
           <div className="flex justify-between text-base text-gray-700">
             <span>Shipping</span>
-            <span className={shippingPrice === 0 ? 'text-green-600 font-semibold' : ''}>${shippingPrice.toFixed(2)}</span>
+            <span className={shippingPrice === 0 ? 'text-green-600 font-semibold' : ''}>{shippingPrice === 0 ? 'FREE' : formatPrice(shippingPrice)}</span>
           </div>
           <div className="flex justify-between text-base text-gray-700 pb-4 border-b-2 border-gray-300">
             <span>Tax (15%)</span>
-            <span>${taxPrice.toFixed(2)}</span>
+            <span>{formatPrice(taxPrice)}</span>
           </div>
           {appliedCoupon && discountAmount > 0 && (
             <div className="flex justify-between text-base text-emerald-700">
               <span>Discount ({appliedCoupon.code})</span>
-              <span className="font-semibold">-${discountAmount.toFixed(2)}</span>
+              <span className="font-semibold">-{formatPrice(discountAmount)}</span>
             </div>
           )}
           <div className="flex justify-between items-center pt-4">
             <span className="text-lg font-bold text-gray-900">Total Amount</span>
-            <span className="text-4xl font-bold text-gray-900">${totalPrice.toFixed(2)}</span>
+            <span className="text-4xl font-bold text-gray-900">{formatPrice(Number(totalPrice))}</span>
           </div>
         </div>
       </div>
@@ -777,7 +779,7 @@ const Checkout: React.FC = () => {
                 <span className="font-mono font-semibold">
                   {appliedCoupon.code}
                 </span>{' '}
-                (-${appliedCoupon.discountAmount.toFixed(2)})
+                (-{formatPrice(appliedCoupon.discountAmount)})
               </span>
             </div>
             <button
