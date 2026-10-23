@@ -62,5 +62,12 @@ temp/
 # Uploads (runtime data)
 uploads/
 
+# Playwright E2E artifacts (test outputs, downloaded browsers)
+test-results/
+playwright-report/
+playwright/.cache/
+/blob-report
+/playwright/.cache
+
 # CI workflows (token needs workflow scope)
 # .github/workflows/
