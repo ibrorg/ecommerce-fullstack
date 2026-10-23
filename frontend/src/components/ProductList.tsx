@@ -10,6 +10,7 @@ import ProductBadges from './ProductBadges';
 import ErrorState from './ErrorState';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { useDebounce } from '../hooks/useDebounce';
+import { useCurrency } from '../context/CurrencyContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { FiArrowRight, FiCheck, FiPlus, FiSearch, FiRefreshCw, FiLoader, FiEye, FiSliders, FiX, FiLink, FiShoppingCart } from 'react-icons/fi';
@@ -92,6 +93,7 @@ const LazyImage: React.FC<{
 const ProductList: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { formatPrice } = useCurrency();
   useDocumentMeta({
     title: 'Shop All Products',
     description: 'Browse our full catalog. Filter by price, brand, rating, and more. Compare products side by side.',
@@ -546,11 +548,11 @@ const ProductList: React.FC = () => {
                 {/* Price */}
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-xl font-bold text-neutral-950">
-                    ${product.price.toFixed(2)}
+                    {formatPrice(product.price)}
                   </span>
                   {product.comparePrice && product.comparePrice > product.price && (
                     <span className="text-sm text-neutral-400 line-through">
-                      ${product.comparePrice.toFixed(2)}
+                      {formatPrice(product.comparePrice)}
                     </span>
                   )}
                 </div>
