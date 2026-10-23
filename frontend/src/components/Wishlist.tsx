@@ -9,6 +9,7 @@ import {
 } from '../store/slices/wishlistSlice';
 import type { WishlistItem } from '../store/slices/wishlistSlice';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useCurrency } from '../context/CurrencyContext';
 import {
   FiHeart,
   FiTrash2,
@@ -53,6 +54,7 @@ const toCardProduct = (item: WishlistItem): WishlistCardProduct => ({
 const Wishlist: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items, error } = useAppSelector((state) => state.wishlist);
+  const { formatPrice } = useCurrency();
   useDocumentMeta({ title: 'Wishlist', description: 'Your saved products for later.' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -315,11 +317,11 @@ const Wishlist: React.FC = () => {
                   {/* Price */}
                   <div className="flex items-baseline gap-2 mb-4 mt-auto">
                     <span className="text-xl font-bold text-gray-900">
-                      ${product.price.toFixed(2)}
+                      {formatPrice(product.price)}
                     </span>
                     {product.comparePrice && product.comparePrice > product.price && (
                       <span className="text-sm text-gray-400 line-through">
-                        ${product.comparePrice.toFixed(2)}
+                        {formatPrice(product.comparePrice)}
                       </span>
                     )}
                   </div>
