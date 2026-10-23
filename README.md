@@ -13,7 +13,7 @@
 
 A production-ready, three-sided e-commerce marketplace with buyer, seller, and admin flows. Built with React 19 + Vite + Express + MongoDB — no external services required to run locally.
 
-[Features](#-features) · [Tech Stack](#-tech-stack) · [Quick Start](#-quick-start) · [Architecture](./ARCHITECTURE.md) · [API Reference](#-api-reference) · [Contributing](./CONTRIBUTING.md)
+[Features](#-features) · [Tech Stack](#-tech-stack) · [Quick Start](#-quick-start) · [Architecture](./ARCHITECTURE.md) · [Env Vars](./ENV.md) · [API Reference](#-api-reference) · [Contributing](./CONTRIBUTING.md)
 
 </div>
 
@@ -49,7 +49,7 @@ E-Shop is a full-stack e-commerce marketplace where:
 | **GST invoices** | PDF invoices with CGST / SGST / IGST split |
 | **Returns** | Request returns with Stripe refund + stock reversal in a transaction |
 | **Address book** | Multiple saved addresses with default shipping / billing |
-| **Multi-currency** | Live currency switcher (USD, EUR, GBP, INR, JPY, AED, AUD, CAD) with locale-aware formatting, persisted per user |
+| **Multi-currency** | Live currency switcher (USD, EUR, GBP, INR, JPY, AED, AUD, CAD) with locale-aware formatting — applied across product cards, product detail, cart, checkout, wishlist, and order history. Persisted per user. |
 | **Dark mode** | Class-based, anti-FOUC, system preference detection |
 | **Internationalization** | English + Hindi with instant language switcher |
 | **PWA** | Installable on mobile with manifest + theme color |
@@ -335,12 +335,13 @@ ecommerce-fullstack/
 │   └── Dockerfile          # nginx static serve
 ├── docker-compose.yml      # mongo + backend + frontend
 ├── ARCHITECTURE.md         # system design + key decisions
+├── ENV.md                   # environment variables reference
 ├── ENTERPRISE_AUDIT.md     # 20-phase enterprise audit
 ├── CONTRIBUTING.md
 └── README.md
 ```
 
-For the full system design, request flow, and key engineering decisions, see **[ARCHITECTURE.md](./ARCHITECTURE.md)**.
+For the full system design, request flow, and key engineering decisions, see **[ARCHITECTURE.md](./ARCHITECTURE.md)**. For the complete environment variables reference, see **[ENV.md](./ENV.md)**.
 
 ---
 

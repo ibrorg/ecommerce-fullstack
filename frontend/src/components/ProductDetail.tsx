@@ -17,7 +17,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { useCurrency } from '../context/CurrencyContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { FiShoppingBag, FiCheck, FiTruck, FiArrowRight, FiShoppingCart } from 'react-icons/fi';
+import { FiShoppingBag, FiCheck, FiTruck, FiArrowRight, FiShoppingCart, FiShare2, FiShield, FiRefreshCcw } from 'react-icons/fi';
 
 // Product response from MongoDB API (uses _id)
 interface ProductApiResponse {
@@ -304,7 +304,7 @@ const ProductDetail: React.FC = () => {
               </div>
               <div className="flex items-center gap-3 text-base text-green-600 font-semibold">
                 <FiCheck size={20} />
-                Free shipping on orders over $50
+                Free shipping on orders over {formatPrice(50)}
               </div>
             </div>
 
@@ -366,21 +366,54 @@ const ProductDetail: React.FC = () => {
             />
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
-              <div className="flex items-start gap-3">
-                <FiTruck className="text-gray-900 flex-shrink-0 mt-1" size={24} />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
+                <FiTruck className="text-gray-900 flex-shrink-0 mt-0.5 sm:mt-1" size={22} />
                 <div>
-                  <p className="font-semibold text-gray-900">Fast Shipping</p>
-                  <p className="text-sm text-gray-600">2-3 business days</p>
+                  <p className="font-semibold text-gray-900 text-sm">Fast Shipping</p>
+                  <p className="text-xs text-gray-600">2-3 business days</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <FiCheck className="text-gray-900 flex-shrink-0 mt-1" size={24} />
+              <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
+                <FiCheck className="text-gray-900 flex-shrink-0 mt-0.5 sm:mt-1" size={22} />
                 <div>
-                  <p className="font-semibold text-gray-900">Quality Guaranteed</p>
-                  <p className="text-sm text-gray-600">30-day returns</p>
+                  <p className="font-semibold text-gray-900 text-sm">Quality Assured</p>
+                  <p className="text-xs text-gray-600">Curated selection</p>
                 </div>
               </div>
+              <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
+                <FiRefreshCcw className="text-gray-900 flex-shrink-0 mt-0.5 sm:mt-1" size={22} />
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">Easy Returns</p>
+                  <p className="text-xs text-gray-600">30-day window</p>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
+                <FiShield className="text-gray-900 flex-shrink-0 mt-0.5 sm:mt-1" size={22} />
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">Secure Checkout</p>
+                  <p className="text-xs text-gray-600">SSL encrypted</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Share button */}
+            <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: product.name, url: window.location.href }).catch(() => {});
+                  } else {
+                    navigator.clipboard?.writeText(window.location.href);
+                    toast.success('Product link copied to clipboard');
+                  }
+                }}
+                className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <FiShare2 size={16} />
+                Share product
+              </button>
+              <span className="text-xs text-gray-400">SKU: {product.sku}</span>
             </div>
           </div>
         </div>

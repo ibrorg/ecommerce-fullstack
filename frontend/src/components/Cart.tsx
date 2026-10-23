@@ -4,13 +4,19 @@ import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { removeFromCart, updateQuantity, addToCart, clearCart } from '../store/slices/cartSlice';
 import RecentlyViewed from './RecentlyViewed';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useCurrency } from '../context/CurrencyContext';
 import toast from 'react-hot-toast';
 import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowRight, FiTruck, FiCheckCircle, FiRotateCcw } from 'react-icons/fi';
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items, totalItems, totalPrice } = useAppSelector((state) => state.cart);
+  const { formatPrice } = useCurrency();
   useDocumentMeta({ title: 'Shopping Cart', description: 'Review your cart and checkout.' });
+
+  const FREE_SHIPPING_THRESHOLD = 100;
+  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice);
+  const freeShippingProgress = Math.min(100, (totalPrice / FREE_SHIPPING_THRESHOLD) * 100);
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
     if (quantity <= 0) {
@@ -71,7 +77,7 @@ const Cart: React.FC = () => {
         <div className="container px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-24 relative flex-1 flex items-center justify-center">
           <div className="text-center max-w-md">
             <div className="flex justify-center mb-8">
-              <div className="w-24 h-24 rounded-2xl bg-gray-100 dark:bg-neutral-800 flex items-center justify-center shadow-lg">
+              <div className="w-24 h-24 rounded-2xl bg-gray-100 dark:bg-neutral-800 flex items-center justify-center shadow-lg animate-float">
                 <FiShoppingBag className="h-12 w-12 text-gray-400 dark:text-neutral-500" />
               </div>
             </div>
@@ -141,7 +147,7 @@ const Cart: React.FC = () => {
                       {item.name}
                     </h3>
                     <div className="flex items-baseline gap-3 mb-3">
-                      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">${item.price.toFixed(2)}</p>
+                      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{formatPrice(item.price)}</p>
                       <p className="text-sm text-gray-500 font-medium">per item</p>
                     </div>
                     <p className={`text-sm font-semibold inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${item.countInStock > 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'}`}>
@@ -184,7 +190,7 @@ const Cart: React.FC = () => {
                     <div className="text-right flex-shrink-0">
                       <p className="text-gray-600 text-sm font-medium mb-1">Subtotal</p>
                       <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -209,7 +215,7 @@ const Cart: React.FC = () => {
               <div className="space-y-6 mb-10">
                 <div className="flex justify-between items-center py-3 border-b border-gray-300">
                   <span className="text-gray-700 font-semibold text-base">Subtotal ({totalItems} items)</span>
-                  <span className="text-xl font-bold text-gray-900">${totalPrice.toFixed(2)}</span>
+                  <span className="text-xl font-bold text-gray-900">{formatPrice(totalPrice)}</span>
                 </div>
                 
                 <div className="flex justify-between items-center py-3 border-b border-gray-300">
@@ -217,23 +223,23 @@ const Cart: React.FC = () => {
                     <FiTruck size={18} />
                     Shipping
                   </span>
-                  {totalPrice > 100 ? (
+                  {totalPrice >= FREE_SHIPPING_THRESHOLD ? (
                     <span className="text-xl font-bold text-green-600">FREE</span>
                   ) : (
-                    <span className="text-xl font-bold text-gray-900">$10.00</span>
+                    <span className="text-xl font-bold text-gray-900">{formatPrice(10)}</span>
                   )}
                 </div>
                 
                 <div className="flex justify-between items-center py-3 border-b border-gray-300">
                   <span className="text-gray-700 font-semibold text-base">Tax (15%)</span>
-                  <span className="text-xl font-bold text-gray-900">${(totalPrice * 0.15).toFixed(2)}</span>
+                  <span className="text-xl font-bold text-gray-900">{formatPrice(totalPrice * 0.15)}</span>
                 </div>
                 
                 <div className="bg-white rounded-xl p-6 my-6 border-2 border-black">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-900 font-bold text-base">Total Amount</span>
                     <span className="text-3xl lg:text-4xl font-bold text-gray-900">
-                      ${(totalPrice + (totalPrice > 100 ? 0 : 10) + totalPrice * 0.15).toFixed(2)}
+                      {formatPrice(totalPrice + (totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : 10) + totalPrice * 0.15)}
                     </span>
                   </div>
                 </div>
@@ -256,23 +262,23 @@ const Cart: React.FC = () => {
                 </Link>
               </div>
 
-              {totalPrice < 100 && (
-                <div className="p-5 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800">
-                  <p className="text-sm text-blue-900 font-semibold mb-3">
-                    🎉 Free shipping unlocked! Add ${(100 - totalPrice).toFixed(2)} more.
+              {remainingForFreeShipping > 0 && (
+                <div className="p-5 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border-2 border-amber-200 dark:border-amber-800">
+                  <p className="text-sm text-amber-900 dark:text-amber-200 font-semibold mb-3">
+                    Add {formatPrice(remainingForFreeShipping)} more to unlock free shipping
                   </p>
-                  <div className="bg-white rounded-lg h-3 overflow-hidden border border-blue-300">
+                  <div className="bg-white dark:bg-neutral-800 rounded-lg h-3 overflow-hidden border border-amber-300 dark:border-amber-700">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-full transition-all duration-300"
-                      style={{ width: `${(totalPrice / 100) * 100}%` }}
+                      className="bg-gradient-to-r from-amber-500 to-amber-600 h-full transition-all duration-500 ease-out"
+                      style={{ width: `${freeShippingProgress}%` }}
                     ></div>
                   </div>
                 </div>
               )}
               
-              {totalPrice >= 100 && (
-                <div className="p-5 rounded-xl bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-2 border-green-200 dark:border-green-800">
-                  <p className="text-sm text-green-900 font-semibold flex items-center gap-2">
+              {remainingForFreeShipping === 0 && totalPrice > 0 && (
+                <div className="p-5 rounded-xl bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-2 border-green-200 dark:border-green-800 animate-fade-in">
+                  <p className="text-sm text-green-900 dark:text-green-200 font-semibold flex items-center gap-2">
                     <FiCheckCircle size={18} />
                     You qualify for free shipping!
                   </p>

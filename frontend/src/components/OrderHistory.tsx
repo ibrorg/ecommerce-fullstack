@@ -4,6 +4,7 @@ import { useAppSelector } from '../store/hooks';
 import api from '../services/api';
 import OrderHistorySkeleton from './OrderHistorySkeleton';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useCurrency } from '../context/CurrencyContext';
 import toast from 'react-hot-toast';
 import { FiPackage, FiArrowRight, FiCheck, FiClock, FiTruck, FiShoppingBag, FiCreditCard, FiDownload, FiLoader } from 'react-icons/fi';
 
@@ -20,6 +21,7 @@ interface Order {
 
 const OrderHistory: React.FC = () => {
   const { user } = useAppSelector((state: any) => state.auth);
+  const { formatPrice } = useCurrency();
   useDocumentMeta({ title: 'Order History', description: 'View your past orders and track deliveries.' });
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,7 +195,7 @@ const OrderHistory: React.FC = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           <p className="text-xs text-gray-500 mb-0.5">{getRelativeTime(order.createdAt)}</p>
-                          <p className="text-2xl font-bold text-gray-900">${(order.totalPrice ?? 0).toFixed(2)}</p>
+                          <p className="text-2xl font-bold text-gray-900">{formatPrice(order.totalPrice ?? 0)}</p>
                         </div>
                         <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold ${
                           order.isPaid 
@@ -254,7 +256,7 @@ const OrderHistory: React.FC = () => {
                         {/* Total */}
                         <div className="col-span-1">
                           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Total</p>
-                          <p className="text-xl lg:text-2xl font-bold text-gray-900">${(order.totalPrice ?? 0).toFixed(2)}</p>
+                          <p className="text-xl lg:text-2xl font-bold text-gray-900">{formatPrice(order.totalPrice ?? 0)}</p>
                         </div>
 
                         {/* Payment Status */}
