@@ -83,6 +83,10 @@ const config: Config = {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'scale-in': 'scaleIn 0.3s ease-out',
         'bounce-sm': 'bounceSmall 0.5s ease-in-out',
+        'shimmer': 'shimmer 1.8s ease-in-out infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'gradient': 'gradientShift 8s ease infinite',
+        'page-enter': 'pageEnter 320ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         fadeIn: {
@@ -104,6 +108,23 @@ const config: Config = {
         bounceSmall: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-4px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        gradientShift: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        pageEnter: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
       spacing: {

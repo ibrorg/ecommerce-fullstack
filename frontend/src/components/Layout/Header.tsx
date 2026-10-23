@@ -109,7 +109,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className={`sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 transition-all duration-300 ${scrolled ? 'shadow-md' : ''}`}>
+    <header className={`sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 transition-all duration-300 animate-slide-down ${scrolled ? 'shadow-md' : ''}`}>
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -129,7 +129,7 @@ const Header: React.FC = () => {
               <Link
                 key={item.href}
                 to={item.href}
-                className="px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                className="nav-underline px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
               >
                 {item.label}
               </Link>

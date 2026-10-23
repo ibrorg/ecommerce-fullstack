@@ -5,6 +5,7 @@ import { addToCart } from '../store/slices/cartSlice';
 import api from '../services/api';
 import RecentlyViewed from '../components/RecentlyViewed';
 import ErrorState from '../components/ErrorState';
+import Reveal from '../components/Reveal';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import {
   FiArrowRight,
@@ -97,15 +98,15 @@ const Home: React.FC = () => {
       {/* Hero Section - Clean Split Layout */}
       <section className="relative overflow-hidden bg-gray-50">
         {/* Decorative background elements - matching Login/Register style */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-100 rounded-full -mr-48 -mt-48 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gray-100 rounded-full -ml-36 -mb-36 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-100 rounded-full -mr-48 -mt-48 pointer-events-none animate-float" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gray-100 rounded-full -ml-36 -mb-36 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
         
         <div className="container relative">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 min-h-[520px] lg:min-h-[620px] items-center">
             {/* Left Content */}
             <div className="py-10 sm:py-12 lg:py-20 lg:pr-8">
               {/* Brand Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-sm mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-sm mb-8 reveal-up reveal-visible">
                 <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-black to-gray-800 flex items-center justify-center text-white text-xs font-bold">
                   E
                 </div>
@@ -113,7 +114,7 @@ const Home: React.FC = () => {
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6 reveal-up reveal-visible" style={{ transitionDelay: '80ms' }}>
                 {isAuthenticated ? (
                   <>Welcome back,<br /><span className="text-gray-600">{user?.name?.split(' ')[0]}.</span></>
                 ) : (
@@ -122,12 +123,12 @@ const Home: React.FC = () => {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg text-gray-500 mb-8 sm:mb-10 max-w-xl leading-relaxed">
+              <p className="text-lg text-gray-500 mb-8 sm:mb-10 max-w-xl leading-relaxed reveal-up reveal-visible" style={{ transitionDelay: '160ms' }}>
                 Curated products with exceptional quality, simplicity, and outstanding service. Shop with confidence.
               </p>
 
               {/* CTAs - Matching Login/Register button style */}
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 reveal-up reveal-visible" style={{ transitionDelay: '240ms' }}>
                 <Link 
                   to="/products" 
                   className="inline-flex items-center justify-center gap-3 bg-black text-white text-base font-semibold rounded-xl hover:bg-gray-900 active:scale-95 transition-all duration-200 py-4 px-8 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
@@ -146,7 +147,7 @@ const Home: React.FC = () => {
               </div>
 
               {/* Trust indicators */}
-              <div className="flex flex-wrap items-center gap-3 mt-10 pt-8 border-t border-gray-200">
+              <div className="flex flex-wrap items-center gap-3 mt-10 pt-8 border-t border-gray-200 reveal-up reveal-visible" style={{ transitionDelay: '320ms' }}>
                 {['Free Shipping', '30-Day Returns', 'Secure Payment'].map((label) => (
                   <div
                     key={label}
@@ -199,11 +200,11 @@ const Home: React.FC = () => {
       <section className="py-16 lg:py-24 bg-white">
         <div className="container">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <Reveal direction="up" className="text-center mb-12">
             <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">FEATURED COLLECTION</p>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Trending Products</h2>
             <p className="text-gray-500 max-w-md mx-auto">Discover our most popular items, handpicked for quality and style.</p>
-          </div>
+          </Reveal>
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -220,12 +221,13 @@ const Home: React.FC = () => {
                 </div>
               ))
             ) : featuredProducts.length > 0 ? (
-              featuredProducts.map((product) => (
-                <ProductCard 
-                  key={product._id} 
-                  product={product} 
-                  onAddToCart={() => handleAddToCart(product)}
-                />
+              featuredProducts.map((product, idx) => (
+                <Reveal key={product._id} direction="up" delay={idx * 60}>
+                  <ProductCard 
+                    product={product} 
+                    onAddToCart={() => handleAddToCart(product)}
+                  />
+                </Reveal>
               ))
             ) : fetchError ? (
               // Network/server error — show retry, not the misleading "no products"
@@ -277,13 +279,13 @@ const Home: React.FC = () => {
       <section className="py-16 lg:py-20 bg-gray-50 border-t border-gray-100">
         <div className="container">
           {/* Section header */}
-          <div className="text-center mb-12">
+          <Reveal direction="up" className="text-center mb-12">
             <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">WHY E-SHOP</p>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">A better shopping experience</h2>
             <p className="text-gray-500 max-w-2xl mx-auto mt-3">
               Premium quality products, fast delivery, and easy returns — designed to make your checkout stress‑free.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
@@ -311,17 +313,18 @@ const Home: React.FC = () => {
                 icon: <FiShield size={20} />,
                 accent: 'bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400',
               },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="group bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg hover:border-gray-300 hover:-translate-y-1 transition-all duration-200"
-              >
-                <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 mb-4 ${feature.accent}`}>
-                  {feature.icon}
+            ].map((feature, idx) => (
+              <Reveal key={feature.title} direction="up" delay={idx * 80}>
+                <div
+                  className="group bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg hover:border-gray-300 hover:-translate-y-1 transition-all duration-200 h-full"
+                >
+                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 mb-4 group-hover:scale-110 transition-transform duration-200 ${feature.accent}`}>
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 mb-1.5">{feature.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
                 </div>
-                <h3 className="text-base font-bold text-gray-900 mb-1.5">{feature.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -336,14 +339,16 @@ const Home: React.FC = () => {
               { value: '500+', label: 'Products', icon: <FiPackage size={20} /> },
               { value: '4.8★', label: 'Average Rating', icon: <FiStar size={20} /> },
               { value: '99%', label: 'On-time Delivery', icon: <FiTrendingUp size={20} /> },
-            ].map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white mb-3">
-                  {stat.icon}
+            ].map((stat, idx) => (
+              <Reveal key={stat.label} direction="scale" delay={idx * 100}>
+                <div className="flex flex-col items-center">
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform">
+                    {stat.icon}
+                  </div>
+                  <span className="text-3xl sm:text-4xl font-bold text-white">{stat.value}</span>
+                  <span className="text-sm text-neutral-400 mt-1">{stat.label}</span>
                 </div>
-                <span className="text-3xl sm:text-4xl font-bold text-white">{stat.value}</span>
-                <span className="text-sm text-neutral-400 mt-1">{stat.label}</span>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -372,10 +377,11 @@ const NewsletterSection: React.FC = () => {
   return (
     <section className="py-16 lg:py-24 bg-white dark:bg-neutral-950">
       <div className="container">
-        <div className="relative max-w-4xl mx-auto rounded-3xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-neutral-900 dark:to-black p-8 sm:p-12 lg:p-16">
-          {/* decorative blobs */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 pointer-events-none" />
+        <Reveal direction="scale">
+          <div className="relative max-w-4xl mx-auto rounded-3xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-neutral-900 dark:to-black animate-gradient p-8 sm:p-12 lg:p-16">
+            {/* decorative blobs */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 pointer-events-none animate-float" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24 pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
 
           <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="flex-1">
@@ -429,7 +435,8 @@ const NewsletterSection: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -454,7 +461,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({ 
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-gray-300 hover:-translate-y-1 transition-all duration-300 h-full">
       <Link
         to={`/products/${product._id}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
@@ -469,7 +476,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({ 
             src={imageSrc}
             alt={product.name}
             loading="lazy"
-            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setImageLoaded(true)}
             onError={() => {
               setImageError(true);
@@ -478,7 +485,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({ 
           />
           
           {/* Category badge */}
-          <div className="absolute top-3 left-3">
+          <div className="absolute top-3 left-3 transition-transform duration-300 group-hover:-translate-y-0.5">
             <span className="inline-flex px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-gray-700 shadow-sm">
               {product.category}
             </span>
