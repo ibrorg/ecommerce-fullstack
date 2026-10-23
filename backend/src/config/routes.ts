@@ -24,6 +24,9 @@ import notificationRoutes from '../routes/notifications';
 import wishlistRoutes from '../routes/wishlist';
 import searchRoutes from '../routes/search';
 import addressRoutes from '../routes/addresses';
+import connectRoutes from '../routes/connect';
+import recommendationRoutes from '../routes/recommendations';
+import infraRoutes from '../routes/infra';
 
 // Middleware
 import { errorHandler, notFound } from '../middleware/errorHandler';
@@ -56,7 +59,10 @@ const routes: RouteConfig[] = [
   { path: '/api/notifications', router: notificationRoutes },
   { path: '/api/wishlist', router: wishlistRoutes },
   { path: '/api/search', router: searchRoutes },
-  { path: '/api/addresses', router: addressRoutes }
+  { path: '/api/addresses', router: addressRoutes },
+  { path: '/api/connect', router: connectRoutes },
+  { path: '/api/recommendations', router: recommendationRoutes },
+  { path: '/api/admin', router: infraRoutes }   // infra sub-routes mounted under /api/admin/infra/*
 ];
 
 /**

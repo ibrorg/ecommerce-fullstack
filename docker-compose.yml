@@ -1,19 +1,57 @@
-# Full stack — backend + frontend + MongoDB
+# Full stack — backend + frontend + MongoDB + Redis + Typesense + Qdrant
 # Usage: docker-compose up --build
 
 services:
   mongodb:
     image: mongo:7
     restart: unless-stopped
+    command: ["--replSet", "rs0"]
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: |
+        mongosh --eval "try { rs.status().ok } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }"
       interval: 10s
       timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
       retries: 5
+
+  typesense:
+    image: typesense/typesense:0.25.1
+    restart: unless-stopped
+    ports:
+      - "8108:8108"
+    volumes:
+      - typesense_data:/data
+    environment:
+      - TYPESENSE_DATA_DIR=/data
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY:-typesense_dev_api_key}
+      - TYPESENSE_ENABLE_CORS=true
+
+  qdrant:
+    image: qdrant/qdrant:v1.11.3
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
 
   backend:
     build:
@@ -25,11 +63,18 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=5000
-      - MONGODB_URI=mongodb://mongodb:27017/ecommerce
+      - MONGODB_URI=mongodb://mongodb:27017/ecommerce?replicaSet=rs0
+      - REDIS_URL=redis://redis:6379
+      - TYPESENSE_URL=http://typesense:8108
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY:-typesense_dev_api_key}
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_CONNECT_CLIENT_ID=${STRIPE_CONNECT_CLIENT_ID}
+      - PLATFORM_FEE_PERCENT=${PLATFORM_FEE_PERCENT:-5}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -38,6 +83,12 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      typesense:
+        condition: service_started
+      qdrant:
+        condition: service_started
 
   frontend:
     build:
@@ -51,3 +102,6 @@ services:
 
 volumes:
   mongo_data:
+  redis_data:
+  typesense_data:
+  qdrant_data:

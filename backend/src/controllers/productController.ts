@@ -3,6 +3,7 @@ import { validationResult, body } from 'express-validator';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import productService from '../services/productService';
 import { sendPaginatedSuccess, sendSuccess, sendValidationError } from '../utils/response';
+import { enqueue, QUEUE_NAMES } from '../queue/queues';
 
 // Compute merchandising badges from product attributes at read time.
 // Badges are derived (not stored) so they stay in sync with data changes
@@ -137,6 +138,12 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
     createdBy: (req as any).user?.id
   });
 
+  // Fire-and-forget: sync the search index + AI embeddings for this product.
+  // Both are fail-open — if Redis/Typesense/Qdrant/OpenAI are unavailable
+  // the jobs silently no-op and the catalog still serves from MongoDB.
+  void enqueue(QUEUE_NAMES.SEARCH_INDEX, { productId: String(product._id), op: 'create' });
+  void enqueue(QUEUE_NAMES.EMBEDDING, { productId: String(product._id) });
+
   return sendSuccess(res, 201, mapProductPreview(product), 'Product created');
 });
 
@@ -150,6 +157,11 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
   }
 
   const updatedProduct = await productService.update(req.params.id, req.body);
+
+  // Re-sync search index + embeddings (name/description may have changed).
+  void enqueue(QUEUE_NAMES.SEARCH_INDEX, { productId: String(updatedProduct._id), op: 'update' });
+  void enqueue(QUEUE_NAMES.EMBEDDING, { productId: String(updatedProduct._id) });
+
   return sendSuccess(res, 200, mapProductPreview(updatedProduct), 'Product updated');
 });
 
@@ -157,7 +169,22 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
 export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
-  await productService.delete(req.params.id);
+  const productId = req.params.id;
+  await productService.delete(productId);
+
+  // Remove from the search index + vector store.
+  void enqueue(QUEUE_NAMES.SEARCH_INDEX, { productId, op: 'delete' });
+
+  // Best-effort Qdrant deletion (no OpenAI call needed for delete).
+  void (async () => {
+    try {
+      const { default: recommendationService } = await import('../services/recommendationService');
+      if (await recommendationService.isEnabled()) {
+        await recommendationService.deleteProduct(productId);
+      }
+    } catch { /* fail-open */ }
+  })();
+
   return sendSuccess(res, 200, null, 'Product deleted successfully');
 });
 

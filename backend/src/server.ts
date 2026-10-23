@@ -20,6 +20,11 @@ import { registerRoutes } from './config/routes';
 import { connectDatabase, setupGracefulShutdown } from './config/database';
 import logger from './utils/logger';
 
+// Queue infra (BullMQ + Redis) — fail-open if REDIS_URL is unset
+import { getQueueConnection, closeQueueConnection } from './queue/connection';
+import { startWorkers, closeWorkers } from './queue/workers';
+import { getQueue, enqueue, QUEUE_NAMES, observeQueueEvents } from './queue/queues';
+
 // Load environment variables
 dotenv.config();
 
@@ -83,6 +88,43 @@ const startServer = async () => {
       setupGracefulShutdown();
     }
 
+    // Start BullMQ workers (fail-open — no-op if REDIS_URL is unset)
+    if (process.env.NODE_ENV !== 'test') {
+      startWorkers();
+      observeQueueEvents();
+
+      // Schedule reservation cleanup as a repeating BullMQ job (every 60s).
+      // Falls back to node-cron if the queue is unavailable so local dev
+      // without Redis still cleans up expired reservations.
+      const queue = getQueue(QUEUE_NAMES.RESERVATION_CLEANUP);
+      if (queue) {
+        // Remove any existing repeat job first to avoid duplicates across restarts.
+        const existing = await queue.getRepeatableJobs();
+        for (const job of existing) {
+          await queue.removeRepeatableByKey(job.key);
+        }
+        await queue.add(
+          'cleanup',
+          {},
+          { repeat: { every: 60_000 }, jobId: undefined, removeOnComplete: 50, removeOnFail: 100 },
+        );
+        logger.info({ msg: 'Reservation cleanup scheduled on BullMQ (every 60s)' });
+      } else {
+        // Fail-open: keep the node-cron fallback for local dev without Redis.
+        cron.schedule('*/60 * * * * *', async () => {
+          try {
+            const { default: reservationService } = await import('./services/reservationService');
+            const released = await reservationService.releaseExpired();
+            if (released > 0) {
+              logger.info({ msg: 'Released expired reservations (cron fallback)', count: released });
+            }
+          } catch (err) {
+            logger.error({ msg: 'Reservation cleanup failed', error: (err as Error).message });
+          }
+        });
+      }
+    }
+
     // Start listening
     app.listen(PORT, () => {
       console.log(`\n🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
@@ -109,18 +151,19 @@ if (process.env.NODE_ENV !== 'test') {
     setTimeout(() => process.exit(1), 1000);
   });
 
-  // release expired inventory reservations every 60 seconds
-  // TTL index is the safety net; this is the primary cleanup + restock
-  cron.schedule('*/60 * * * * *', async () => {
-    try {
-      const { default: reservationService } = await import('./services/reservationService');
-      const released = await reservationService.releaseExpired();
-      if (released > 0) {
-        logger.info({ msg: 'Released expired reservations', count: released });
-      }
-    } catch (err) {
-      logger.error({ msg: 'Reservation cleanup failed', error: (err as Error).message });
-    }
+  // Graceful shutdown — close BullMQ workers + Redis connection so the
+  // process exits cleanly.
+  process.on('SIGTERM', async () => {
+    logger.info({ msg: 'SIGTERM received — shutting down workers' });
+    await closeWorkers();
+    await closeQueueConnection();
+    process.exit(0);
+  });
+  process.on('SIGINT', async () => {
+    logger.info({ msg: 'SIGINT received — shutting down workers' });
+    await closeWorkers();
+    await closeQueueConnection();
+    process.exit(0);
   });
 
   startServer();

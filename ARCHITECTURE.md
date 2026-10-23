@@ -97,3 +97,49 @@ This document describes the system design, request flow, and key engineering dec
 - **Adding a currency**: append to `CURRENCIES` in `frontend/src/context/CurrencyContext.tsx`. The switcher, formatter, and persistence pick it up automatically.
 - **Adding a language**: create `frontend/src/i18n/locales/<code>.json`, import it in `frontend/src/i18n/index.ts`, and add it to the `resources` map.
 - **Adding an API route**: create a route file under `backend/src/routes`, register it in `backend/src/config/routes.ts`, and add a controller + service pair.
+
+## Optional infrastructure (BullMQ, Typesense, Qdrant, Stripe Connect)
+
+The platform ships with four optional infrastructure backends. All four are **fail-open**: if their env vars are unset or the service is unreachable, the system degrades gracefully to the existing MongoDB-based paths. This keeps local dev simple (no Redis / Typesense / Qdrant / OpenAI needed) while letting production deployments switch each on independently.
+
+### BullMQ + Redis (job queue)
+
+- **Purpose**: decouples background work (reservation TTL cleanup, email sends, search indexing, embedding generation) from the request path.
+- **Config**: `REDIS_URL`. If unset, the queue is a no-op and jobs run inline (or, for reservation cleanup, fall back to the node-cron schedule).
+- **Code**: `backend/src/queue/` — `connection.ts` (Redis client), `queues.ts` (queue + enqueue helper), `workers.ts` (worker startup + graceful shutdown), `jobs/` (per-queue handlers).
+- **Startup**: `server.ts` calls `startWorkers()` + schedules the reservation-cleanup repeatable job on startup; `SIGTERM`/`SIGINT` close workers + Redis.
+
+### Typesense (semantic search)
+
+- **Purpose**: typo-tolerant, faceted full-text search replacing the MongoDB prefix-regex fallback.
+- **Config**: `TYPESENSE_URL` + `TYPESENSE_API_KEY`.
+- **Code**: `backend/src/services/typesenseService.ts` — `ensureCollection()`, `upsertProduct()`, `deleteDocument()`, `search()`, `reindexAll()`.
+- **Indexing**: product create/update/delete enqueues a `search-index` job (via BullMQ) that syncs the Typesense document. Fail-open: if Typesense is down, the `/api/search` route falls back to the MongoDB autocomplete path.
+- **Admin**: `POST /api/admin/infra/reindex/search` bulk-reindexes the catalog.
+
+### OpenAI + Qdrant (AI recommendations)
+
+- **Purpose**: vector-based "similar products" via OpenAI `text-embedding-3-small` embeddings + Qdrant cosine similarity.
+- **Config**: `OPENAI_API_KEY` + `QDRANT_URL`.
+- **Code**: `backend/src/services/recommendationService.ts` — `indexProduct()` (generate embedding + upsert into Qdrant), `getSimilar()` (vector nearest-neighbour), `reindexAll()`.
+- **Indexing**: product create/update enqueues an `embedding` job. Fail-open: if OpenAI or Qdrant is unavailable, `GET /api/recommendations/similar/:id` falls back to the category-based `SearchService.getRelated()`.
+- **Admin**: `POST /api/admin/infra/reindex/embeddings` bulk-reindexes.
+
+### Stripe Connect (marketplace seller payouts)
+
+- **Purpose**: Express-account onboarding + transfers + payouts so sellers get paid for their orders.
+- **Config**: `STRIPE_SECRET_KEY` (platform key), `STRIPE_CONNECT_CLIENT_ID`, `PLATFORM_FEE_PERCENT` (default 5).
+- **Code**: `backend/src/services/stripeConnectService.ts` — `createAccount()`, `getOnboardingLink()`, `getAccountStatus()`, `createTransfer()`, `createPayout()`, `listPayouts()`.
+- **Model change**: `User.stripeAccountId` added (sparse index).
+- **Routes**: `/api/connect/*` (seller-scoped) — create account, get onboarding link, check status, trigger/list payouts.
+- **Platform fee**: `computePlatformFee(orderTotal)` returns the platform's cut; order creation should call `createTransfer(sellerStripeAccountId, orderTotal - fee, orderId)` after payment succeeds.
+
+### Health + reindex endpoints
+
+- `GET /api/admin/infra/health` — status of each backend (queue, typesense, qdrant).
+- `POST /api/admin/infra/reindex/search` — bulk reindex Typesense.
+- `POST /api/admin/infra/reindex/embeddings` — bulk reindex Qdrant.
+
+### SSR migration (Next.js)
+
+Deferred to a separate branch + PR series — it is a multi-week rewrite of the frontend (Vite SPA → Next.js App Router) that touches routing, data fetching, auth, i18n, and SEO. Tracked in issue #1.
