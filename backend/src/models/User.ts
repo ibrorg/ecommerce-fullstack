@@ -129,7 +129,10 @@ export interface IUser extends Document {
   
   // Seller Profile (if role = 'seller')
   seller?: ISellerProfile;
-  
+
+  // Stripe Connect — marketplace seller payout account (Express account id)
+  stripeAccountId?: string;
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
@@ -444,6 +447,14 @@ const userSchema: Schema = new Schema(
         type: Number,
         default: 0
       }
+    },
+
+    // Stripe Connect — marketplace seller payout account (Express account id)
+    stripeAccountId: {
+      type: String,
+      sparse: true,
+      index: true,
+      default: null,
     },
 
     // Soft Delete
