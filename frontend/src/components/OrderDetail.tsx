@@ -4,6 +4,7 @@ import { useAppSelector } from '../store/hooks';
 import Payment from './Payment';
 import OrderDetailSkeleton from './OrderDetailSkeleton';
 import api from '../services/api';
+import { useCurrency } from '../context/CurrencyContext';
 import toast from 'react-hot-toast';
 import {
   FiPackage, FiTruck, FiCheck, FiClock, FiCreditCard,
@@ -55,6 +56,7 @@ const OrderDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const { user } = useAppSelector((state: any) => state.auth);
+  const { formatPrice } = useCurrency();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -452,10 +454,10 @@ const OrderDetail: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900 mb-1 truncate">{item.name}</h3>
                       <p className="text-sm text-gray-500 mb-2">
-                        ${(item.price ?? 0).toFixed(2)} × {item.quantity}
+                        {formatPrice(item.price ?? 0)} × {item.quantity}
                       </p>
                       <p className="text-lg font-bold text-gray-900">
-                        ${((item.price ?? 0) * item.quantity).toFixed(2)}
+                        {formatPrice((item.price ?? 0) * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -548,20 +550,20 @@ const OrderDetail: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium text-gray-900">${(order.itemsPrice ?? 0).toFixed(2)}</span>
+                  <span className="font-medium text-gray-900">{formatPrice(order.itemsPrice ?? 0)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Shipping</span>
-                  <span className="font-medium text-gray-900">${(order.shippingPrice ?? 0).toFixed(2)}</span>
+                  <span className="font-medium text-gray-900">{formatPrice(order.shippingPrice ?? 0)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Tax</span>
-                  <span className="font-medium text-gray-900">${(order.taxPrice ?? 0).toFixed(2)}</span>
+                  <span className="font-medium text-gray-900">{formatPrice(order.taxPrice ?? 0)}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-3 mt-3">
                   <div className="flex justify-between">
                     <span className="font-bold text-gray-900">Total</span>
-                    <span className="text-xl font-bold text-gray-900">${(order.totalPrice ?? 0).toFixed(2)}</span>
+                    <span className="text-xl font-bold text-gray-900">{formatPrice(order.totalPrice ?? 0)}</span>
                   </div>
                 </div>
               </div>
